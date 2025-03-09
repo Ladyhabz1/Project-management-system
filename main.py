@@ -100,3 +100,18 @@ def list_pending_tasks():
 
 @click.command()
 @click.argument("employee_id", type=int)
+
+def view_employee_workload(employee_id):
+    """View workload of an employee"""
+    session = SessionLocal()
+    employee = session.query(Employee).filter_by(id=employee_id).first()
+    if not employee:
+        click.echo("Employee not found.")
+        return
+    click.echo(f"Workload for {employee.name}:")
+    for task in employee.tasks:
+        status = "Completed" if task.completed else "Pending"
+        click.echo(f"- {task.title} (Deadline: {task.deadline}, Status: {status})")
+    session.close()
+
+@click.command()
