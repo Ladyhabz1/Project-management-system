@@ -133,3 +133,15 @@ def generate_report():
         total = len(employee.tasks)
         click.echo(f"{employee.name}: {completed}/{total} tasks completed")
     session.close()
+
+cli.add_command(add_project)
+cli.add_command(add_employee)
+cli.add_command(add_task)
+cli.add_command(assign_employee)
+cli.add_command(list_projects)
+cli.add_command(list_pending_tasks)
+cli.add_command(view_employee_workload)
+cli.add_command(generate_report)
+
+if __name__ == "__main__":
+    cli()
