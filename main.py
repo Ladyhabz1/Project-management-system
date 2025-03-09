@@ -13,6 +13,7 @@ def cli():
 @click.argument("name")
 @click.argument("description")
 @click.argument("deadline")
+
 def add_project(name, description, deadline):
     """Add a new project"""
     session = SessionLocal()
@@ -40,6 +41,7 @@ def add_employee(name, role):
 @click.argument("deadline")
 @click.argument("priority")
 @click.argument("project_id", type=int)
+
 def add_task(title, description, deadline, priority, project_id):
     """Add a new task"""
     session = SessionLocal()
@@ -59,3 +61,18 @@ def add_task(title, description, deadline, priority, project_id):
 @click.command()
 @click.argument("task_id", type=int)
 @click.argument("employee_id", type=int)
+
+def assign_employee(task_id, employee_id):
+    """Assign an employee to a task"""
+    session = SessionLocal()
+    task = session.query(Task).filter_by(id=task_id).first()
+    employee = session.query(Employee).filter_by(id=employee_id).first()
+    if task and employee:
+        task.employees.append(employee)
+        session.commit()
+        click.echo(f"Employee '{employee.name}' assigned to task '{task.title}'")
+    else:
+        click.echo("Invalid task or employee ID.")
+    session.close()
+
+@click.command()
