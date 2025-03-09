@@ -40,3 +40,22 @@ def add_employee(name, role):
 @click.argument("deadline")
 @click.argument("priority")
 @click.argument("project_id", type=int)
+def add_task(title, description, deadline, priority, project_id):
+    """Add a new task"""
+    session = SessionLocal()
+    task = Task(
+        title=title, 
+        description=description, 
+        deadline=datetime.datetime.strptime(deadline, "%Y-%m-%d"), 
+        priority=priority, 
+        project_id=project_id,
+        completed=False
+    )
+    session.add(task)
+    session.commit()
+    session.close()
+    click.echo(f"Task '{title}' added successfully!")
+
+@click.command()
+@click.argument("task_id", type=int)
+@click.argument("employee_id", type=int)
