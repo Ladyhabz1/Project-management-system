@@ -76,3 +76,16 @@ def assign_employee(task_id, employee_id):
     session.close()
 
 @click.command()
+
+def list_projects():
+    """List all projects with progress"""
+    session = SessionLocal()
+    projects = session.query(Project).all()
+    for project in projects:
+        total_tasks = session.query(Task).filter_by(project_id=project.id).count()
+        completed_tasks = session.query(Task).filter_by(project_id=project.id, completed=True).count()
+        progress = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+        click.echo(f"{project.id}: {project.name} (Deadline: {project.deadline}, Progress: {progress:.2f}%)")
+    session.close()
+
+@click.command()
