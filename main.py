@@ -115,3 +115,21 @@ def view_employee_workload(employee_id):
     session.close()
 
 @click.command()
+
+def generate_report():
+    """Generate reports on task completion and employee performance"""
+    session = SessionLocal()
+    total_tasks = session.query(Task).count()
+    completed_tasks = session.query(Task).filter_by(completed=True).count()
+    pending_tasks = total_tasks - completed_tasks
+    click.echo(f"Total Tasks: {total_tasks}")
+    click.echo(f"Completed Tasks: {completed_tasks}")
+    click.echo(f"Pending Tasks: {pending_tasks}")
+    
+    employees = session.query(Employee).all()
+    click.echo("\nEmployee Performance:")
+    for employee in employees:
+        completed = sum(1 for task in employee.tasks if task.completed)
+        total = len(employee.tasks)
+        click.echo(f"{employee.name}: {completed}/{total} tasks completed")
+    session.close()
