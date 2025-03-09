@@ -89,3 +89,14 @@ def list_projects():
     session.close()
 
 @click.command()
+
+def list_pending_tasks():
+    """List all pending tasks"""
+    session = SessionLocal()
+    tasks = session.query(Task).filter_by(completed=False).all()
+    for task in tasks:
+        click.echo(f"{task.id}: {task.title} (Deadline: {task.deadline}, Priority: {task.priority})")
+    session.close()
+
+@click.command()
+@click.argument("employee_id", type=int)
