@@ -62,18 +62,36 @@ def add_task(title, description, deadline, priority, project_id):
 @click.argument("task_id", type=int)
 @click.argument("employee_id", type=int)
 
-def assign_employee(task_id, employee_id):
-    """Assign an employee to a task"""
+
+def assign_employee(employee_id, task_id):
     session = sessionLocal()
-    task = session.query(Task).filter_by(id=task_id).first()
-    employee = session.query(Employee).filter_by(id=employee_id).first()
-    if task and employee:
-        task.employees.append(employee)
+    try:
+        # Ensure Employee and Task exist
+        task = session.query(Task).filter_by(id=task_id).first()
+        employee = session.query(Employee).filter_by(id=employee_id).first()
+        
+        if not task:
+            print(f"Error: Task with ID {task_id} does not exist.")
+            return
+        if not employee:
+            print(f"Error: Employee with ID {employee_id} does not exist.")
+            return
+        
+        # Check if assignment already exists
+        existing_assignment = session.query(employee_task).filter_by(employee_id=employee_id, task_id=task_id).first()
+        if existing_assignment:
+            print("Employee is already assigned to this task.")
+            return
+        
+        # Assign Employee to Task
+        employee.tasks.append(task)
         session.commit()
-        click.echo(f"Employee '{employee.name}' assigned to task '{task.title}'")
-    else:
-        click.echo("Invalid task or employee ID.")
+        print("Employee successfully assigned to task!")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        session.rollback()
     session.close()
+
 
 @click.command()
 
