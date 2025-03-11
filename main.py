@@ -1,7 +1,7 @@
 import click
 from sqlalchemy.orm import Session
-from database import SessionLocal
-from models import Project, Employee, Task, task_employee_association
+from database import sessionLocal
+from models import Project, Employee, Task, employee_task
 import datetime
 
 @click.group()
@@ -16,7 +16,7 @@ def cli():
 
 def add_project(name, description, deadline):
     """Add a new project"""
-    session = SessionLocal()
+    session = sessionLocal()
     project = Project(name=name, description=description, deadline=datetime.datetime.strptime(deadline, "%Y-%m-%d"))
     session.add(project)
     session.commit()
@@ -28,7 +28,7 @@ def add_project(name, description, deadline):
 @click.argument("role")
 def add_employee(name, role):
     """Add a new employee"""
-    session = SessionLocal()
+    session = sessionLocal()
     employee = Employee(name=name, role=role)
     session.add(employee)
     session.commit()
@@ -44,7 +44,7 @@ def add_employee(name, role):
 
 def add_task(title, description, deadline, priority, project_id):
     """Add a new task"""
-    session = SessionLocal()
+    session = sessionLocal()
     task = Task(
         title=title, 
         description=description, 
@@ -64,7 +64,7 @@ def add_task(title, description, deadline, priority, project_id):
 
 def assign_employee(task_id, employee_id):
     """Assign an employee to a task"""
-    session = SessionLocal()
+    session = sessionLocal()
     task = session.query(Task).filter_by(id=task_id).first()
     employee = session.query(Employee).filter_by(id=employee_id).first()
     if task and employee:
@@ -79,7 +79,7 @@ def assign_employee(task_id, employee_id):
 
 def list_projects():
     """List all projects with progress"""
-    session = SessionLocal()
+    session = sessionLocal()
     projects = session.query(Project).all()
     for project in projects:
         total_tasks = session.query(Task).filter_by(project_id=project.id).count()
@@ -92,7 +92,7 @@ def list_projects():
 
 def list_pending_tasks():
     """List all pending tasks"""
-    session = SessionLocal()
+    session = sessionLocal()
     tasks = session.query(Task).filter_by(completed=False).all()
     for task in tasks:
         click.echo(f"{task.id}: {task.title} (Deadline: {task.deadline}, Priority: {task.priority})")
@@ -103,7 +103,7 @@ def list_pending_tasks():
 
 def view_employee_workload(employee_id):
     """View workload of an employee"""
-    session = SessionLocal()
+    session = sessionLocal()
     employee = session.query(Employee).filter_by(id=employee_id).first()
     if not employee:
         click.echo("Employee not found.")
@@ -118,7 +118,7 @@ def view_employee_workload(employee_id):
 
 def generate_report():
     """Generate reports on task completion and employee performance"""
-    session = SessionLocal()
+    session = sessionLocal()
     total_tasks = session.query(Task).count()
     completed_tasks = session.query(Task).filter_by(completed=True).count()
     pending_tasks = total_tasks - completed_tasks
