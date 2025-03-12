@@ -65,7 +65,7 @@ def assign_employee(task_id, employee_id):
         if task and employee:
             task.employees.append(employee)
             session.commit()
-            click.echo(f"Employee {employee_id} assigned to task {task_id}.")
+            click.echo(f"Employee {employee.name} assigned to task {task.name}.")
         else:
             click.echo("Task or Employee not found.")
     except Exception as e:
