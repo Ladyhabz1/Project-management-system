@@ -10,6 +10,7 @@ Built using **Python, Click, and SQLAlchemy ORM**, this project ensures persiste
 - [Usage](#usage)
 - [Testing](#testing)
 - [Contribution](#contributing)
+- [Contact](#contact)
 - [License](#license)
 
 ## Features
@@ -57,17 +58,20 @@ To run the CLI, use:
  ```
  ## Testing
 
- After installing dependencies and setting up the database, follow these steps to manually verify that everything is working correctly.
----
+After setting up the database and installing dependencies, follow these steps to manually verify that everything is working correctly.
 
 ### 1. Verify the Database Setup
 
 Check if the database was created successfully:
 
 ```bash
-sqlite3 database.db .tables
+sqlite3 database.db
 ```
--If this command lists tables like projects, tasks, and employees, the database setup is correct.
+Then:
+```bash
+.tables
+```
+If this command lists tables like projects, tasks, and employees, the database setup is correct.
 
 ### 2. Run The Cli
 ```bash
@@ -143,5 +147,10 @@ Want to contribute? Follow these steps:
     ```
 6. Submit a Pull Request
 
+### Contact
+Can be reached by the email below for questions and comments 
+
+[Email](guyohabibahassan@gmail.com)
+---
 ### License
 This project is open-source and available under the MIT License.
