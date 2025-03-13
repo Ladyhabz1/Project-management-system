@@ -65,13 +65,13 @@ After setting up the database and installing dependencies, follow these steps to
 Check if the database was created successfully:
 
 ```bash
-sqlite3 database.db
+sqlite3 project_management.db
 ```
 Then:
 ```bash
 .tables
 ```
-If this command lists tables like projects, tasks, and employees, the database setup is correct.
+If this command lists tables like projects, tasks, and employees, employee_task, the database setup is correct.
 
 ### 2. Run The Cli
 ```bash
