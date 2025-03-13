@@ -54,6 +54,22 @@ def add_task(project_id, title, description, deadline, priority):
         session.close()
 
 @click.command()
+@click.argument('name')
+@click.argument('role')
+def add_employee(name, role):
+    """Add a new employee"""
+    session = get_session()
+    try:
+        employee = Employee(name=name, role=role)
+        session.add(employee)
+        session.commit()
+        click.echo(f"Employee '{name}' added successfully!")
+    except Exception as e:
+        click.echo(f"Error adding employee: {e}")
+    finally:
+        session.close()
+
+@click.command()
 @click.argument('task_id', type=int)
 @click.argument('employee_id', type=int)
 def assign_employee(task_id, employee_id):
@@ -65,7 +81,7 @@ def assign_employee(task_id, employee_id):
         if task and employee:
             task.employees.append(employee)
             session.commit()
-            click.echo(f"Employee {employee.name} assigned to task {task.name}.")
+            click.echo(f"Employee {employee.name} assigned to task {task.title}.")
         else:
             click.echo("Task or Employee not found.")
     except Exception as e:
@@ -109,6 +125,7 @@ def generate_report():
 # Add commands to CLI
 cli.add_command(create_project)
 cli.add_command(add_task)
+cli.add_command(add_employee)  # Now properly added
 cli.add_command(assign_employee)
 cli.add_command(view_workload)
 cli.add_command(generate_report)
